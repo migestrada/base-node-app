@@ -1,7 +1,7 @@
-const apiNormalization = obj => {
+module.exports = array => {
   const result = {}
-  Object.keys(obj).forEach(key => {
-    result[obj[key].id] = obj[key]
+  Object.values(array).forEach(elem => {
+    result[elem.id] = elem
   })
   return result;
 }

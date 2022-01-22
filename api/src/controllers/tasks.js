@@ -1,5 +1,6 @@
 const { response } = require('express')
-const Task = require('../models/Task');
+const apiNormalization = require('../until/apiNormalization')
+const { Task } = require('../models');
 
 const taskParams = (body = {}) => ({
   title: body.title,
@@ -20,7 +21,9 @@ const search = (req, res = response) => {
 
 const create = async (req, res = response) => {
   let response, error;
-  const task = new Task(taskParams(req.body));
+
+
+  const task = new Task(taskParams(req.body))
 
   if (!task.title) {
     error = 'Empty title';
@@ -38,7 +41,7 @@ const create = async (req, res = response) => {
     await task.save()
     response = {
       objects: {
-        tasks: task
+        tasks: apiNormalization(task)
       }
     }
   }

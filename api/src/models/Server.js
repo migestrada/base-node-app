@@ -4,7 +4,7 @@ const cors = require('cors');
 const fs = require('fs');
 const bodyParser = require('body-parser')
 // Project
-const db = require('../database/connection');
+const db = require('.');
 const decamelize = require('../until/decamelize')
 
 class Server {
@@ -31,17 +31,16 @@ class Server {
   }
   
   async routes() {
-    
-      const filleNames = await fs.readdirSync('src/routes')
+      const filesNames = await fs.readdirSync('src/routes')
 
-      filleNames.forEach(async (fileName) => {
+      filesNames.forEach(async (fileName) => {
         const splitedFileName = fileName.split('.')
         if (splitedFileName.length === 2) {
-          const pathName = fileName.split('.')[0]
-          const routes = await require(`../routes/${fileName}`);
-          this.app.use(`/api/${pathName}`, routes)
+          const pathName = decamelize(splitedFileName[0])
+          const router = await require(`../routes/${fileName}`);
+          this.app.use(`/api/${pathName}`, router)
         } else {
-          console.log(`Error route file name: ${fileName}`)
+          console.log(`Error on router file name: ${fileName}`)
         }
       })
   }
