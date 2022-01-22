@@ -2,28 +2,45 @@ const { response } = require('express')
 const apiNormalization = require('../until/apiNormalization')
 const { Task } = require('../models');
 
-const taskParams = (body = {}) => ({
+const taskModelParams = (body = {}) => ({
   title: body.title,
   description: body.description
 });
 
-const init = (req, res = response) => {
+const init = async (req, res = response) => {
+  const tasks = await Task.findAll();
+
   res.json({
-    msg: 'TASK INIT'
+    objects: {
+      tasks: apiNormalization(tasks)
+    }
   })
 }
 
-const search = (req, res = response) => {
+const search = async (req, res = response) => {
+  const { params } = req;
+  let tasks = [];
+
+  if (params.id) {
+    const task = await Task.findByPk(params.id)
+    if (task) tasks.push(task)
+  } else {
+
+  }
+
+
   res.json({
-    msg: 'SEARCH'
+    taskIds: tasks.map(task => task.id),
+    objects: {
+      tasks: apiNormalization(tasks)
+    }
   })
 }
 
 const create = async (req, res = response) => {
   let response, error;
 
-
-  const task = new Task(taskParams(req.body))
+  const task = new Task(taskModelParams(req.body));
 
   if (!task.title) {
     error = 'Empty title';
@@ -46,19 +63,69 @@ const create = async (req, res = response) => {
     }
   }
 
+  res.json(response);
+}
+
+const update = async (req, res = response) => {
+  const { params } = req;
+  let response = {};
+  let tasks = [],
+      error = null,
+      task = null;
+
+  if (params.id) {
+    task = await Task.findByPk(params.id)
+    if (task) {
+      const taskParams = taskModelParams(req.body);
+
+      if (!taskParams.title) {
+        error = 'Empty title';
+      }
+    
+      if (!taskParams.description) {
+        error = 'Empty description';
+      }
+      
+      if (!error) {
+        task.update(taskParams)
+
+        response = {
+          objects: {
+            tasks: apiNormalization([task])
+          }
+        }
+      }
+    } else {
+      response = { error: 'Not found', status: 404 };
+    }
+  } else {
+    response = { error: 'Undefined id', status: 400 };
+  }
+
+  res.status(response.status || 200).json(response)
+}
+
+const eliminate = async (req, res = response) => {
+  const { params } = req;
+  let response,
+      task;
+
+  if (params.id) {
+    task = await Task.findByPk(params.id)
+    if (task) {
+      task.destroy()
+
+      response = {
+        taskId: task.id
+      }
+    } else {
+      response = { error: 'Not found', status: 404 };
+    }
+  } else {
+    response = { error: 'Undefined id', status: 400 };
+  }
+
   res.json(response)
-}
-
-const update = (req, res = response) => {
-  res.json({
-    msg: 'UPDATE'
-  })
-}
-
-const eliminate = (req, res = response) => {
-  res.json({
-    msg: 'ELIMINATE'
-  })
 }
 
 module.exports = {

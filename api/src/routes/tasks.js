@@ -11,9 +11,10 @@ const {
 const router = Router();
 
 router.get('/', init);
-router.get('/search', search);
+router.get('/search/', search);
+router.get('/search/:id', search);
 router.post('/', create);
 router.put('/:id', update);
-router.delete('/delete/:id', eliminate);
+router.delete('/:id', eliminate);
 
 module.exports = router;
