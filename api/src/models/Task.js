@@ -1,20 +1,13 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const db = require('../database/connection')
+module.exports = (sequelize, DataTypes) => {
+  const Task = sequelize.define("Task", {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING
+    }
+  });
 
-class Task extends Model {}
-
-Task.init({
-  // Model attributes are defined here
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  description: {
-    type: DataTypes.STRING
-  }
-}, {
-  sequelize: db,
-  modelName: 'Task'
-});
-
-module.exports = Task;
+  return Task
+};

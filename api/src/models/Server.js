@@ -54,7 +54,7 @@ class Server {
 
   async dbConnection() {
     try {   
-      await db.authenticate();
+      await db.sequelize.authenticate();
       console.log('Connection has been established successfully.');
     } catch (error) {
       throw error
