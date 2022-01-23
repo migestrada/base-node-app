@@ -18,8 +18,12 @@ module.exports = {
     'react',
   ],
   'rules': {
-    'linebreak-style': ['error', 'windows'],
+    'linebreak-style': 0,
     'arrow-parens': ['error', 'as-needed'],
-    'indent': ['error', 2],
+    'indent': ['error', 2, { SwitchCase: 1 }],
+    'object-curly-spacing': ['error', 'always'],
+    'comma-dangle': ['error', 'only-multiline'],
+    'max-len': ['error', { 'code': 150 }],
+    "require-jsdoc": ["error",'never']
   },
 };
