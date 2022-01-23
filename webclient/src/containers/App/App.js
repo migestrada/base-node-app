@@ -9,7 +9,7 @@ const App = props => {
     <Box>
       <Tasks />
     </Box>
-  )
+  );
 };
 
 export default App;
