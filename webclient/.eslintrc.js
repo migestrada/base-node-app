@@ -24,6 +24,7 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'comma-dangle': ['error', 'only-multiline'],
     'max-len': ['error', { 'code': 150 }],
-    "require-jsdoc": ["error",'never']
+    "require-jsdoc": 0,
+    "react/prop-types": 0,
   },
 };
